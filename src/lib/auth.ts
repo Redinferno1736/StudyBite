@@ -20,12 +20,10 @@ export const authOptions: AuthOptions = {
         async jwt({ token, account }) {
             // Initial sign in
             if (account) {
-                return {
-                    ...token,
-                    accessToken: account.access_token,
-                    refreshToken: account.refresh_token,
-                    expiresAt: account.expires_at ? account.expires_at * 1000 : 0,
-                };
+                token.accessToken = account.access_token;
+                token.refreshToken = account.refresh_token;
+                token.expiresAt = account.expires_at ? account.expires_at * 1000 : 0;
+                return token;
             }
 
             // Token is still valid
@@ -37,18 +35,14 @@ export const authOptions: AuthOptions = {
             if (token.refreshToken) {
                 try {
                     const refreshedTokens = await refreshAccessToken(token.refreshToken as string);
-                    return {
-                        ...token,
-                        accessToken: refreshedTokens.accessToken,
-                        refreshToken: refreshedTokens.refreshToken,
-                        expiresAt: refreshedTokens.expiresAt,
-                    };
+                    token.accessToken = refreshedTokens.accessToken!;
+                    token.refreshToken = refreshedTokens.refreshToken;
+                    token.expiresAt = refreshedTokens.expiresAt!;
+                    return token;
                 } catch (error) {
                     console.error("Error refreshing access token:", error);
-                    return {
-                        ...token,
-                        error: "RefreshAccessTokenError",
-                    };
+                    token.error = "RefreshAccessTokenError";
+                    return token;
                 }
             }
 
