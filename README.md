@@ -119,10 +119,3 @@ src/
 - Tokens are automatically refreshed when expired
 - Always keep your `.env.local` file secure and never commit it to version control
 
-## License
-
-MIT
-
-## Support
-
-For issues or questions, please contact the development team.
